@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Attendance System</title>
+<style>
+body{font-family:Arial;background:#0f172a;color:#fff;text-align:center}
+.box{background:#1e293b;padding:20px;border-radius:10px;width:300px;margin:auto;margin-top:50px}
+input,button{width:100%;padding:10px;margin:10px 0}
+button{background:#22c55e;color:#fff;border:none}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+<h2>Login</h2>
+<input id="user" placeholder="Username">
+<input id="pass" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<div id="panel" style="display:none">
+<h3>Welcome</h3>
+<button onclick="checkIn()">Check In</button>
+<button onclick="checkOut()">Check Out</button>
+</div>
+
+<p id="msg"></p>
+</div>
+
+<script>
+const URL="https://script.google.com/macros/s/AKfycbxxxHrUUSHx-JOORIAfzgabTtySGBRcwBdVs47Ba891Wi1jgfKkOBuy0Spl2cPizz-LUw/exec";
+
+function login(){
+fetch(URL,{
+method:"POST",
+body:JSON.stringify({action:"login",username:user.value,password:pass.value})
+})
+.then(r=>r.json())
+.then(d=>{
+if(d.status=="success"){
+localStorage.user=user.value;
+panel.style.display="block";
+}else alert("Wrong login");
+});
+}
+
+function checkIn(){
+navigator.geolocation.getCurrentPosition(p=>{
+fetch(URL,{method:"POST",body:JSON.stringify({
+action:"checkin",
+username:localStorage.user,
+lat:p.coords.latitude,
+lng:p.coords.longitude
+})}).then(r=>r.text()).then(m=>msg.innerText=m);
+});
+}
+
+function checkOut(){
+fetch(URL,{method:"POST",body:JSON.stringify({
+action:"checkout",
+username:localStorage.user
+})}).then(r=>r.text()).then(m=>msg.innerText=m);
+}
+</script>
+
+</body>
+</html>
