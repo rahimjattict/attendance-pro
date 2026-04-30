@@ -1,29 +1,98 @@
 <!DOCTYPE html>
 <html>
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+
+<style>
+body{
+  font-family: Arial;
+  background:#0f172a;
+  color:white;
+  text-align:center;
+}
+
+.box{
+  background:#1e293b;
+  padding:20px;
+  margin:20px auto;
+  width:350px;
+  border-radius:10px;
+}
+
+input,button{
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  border:none;
+  border-radius:5px;
+}
+
+button{
+  background:#3b82f6;
+  color:white;
+}
+</style>
+</head>
+
 <body>
-<h2>Admin Panel</h2>
 
-<input id="u" placeholder="Username">
-<input id="p" placeholder="Password">
-<button onclick="add()">Add User</button>
+<h2>⚙️ Admin Dashboard</h2>
 
-<input id="d" placeholder="Delete user">
-<button onclick="del()">Delete</button>
+<div class="box">
+<h3>Add User</h3>
+<input id="newUser" placeholder="Username">
+<input id="newPass" placeholder="Password">
+<button onclick="addUser()">Add</button>
+</div>
+
+<div class="box">
+<h3>Delete User</h3>
+<input id="delUser" placeholder="Username">
+<button onclick="deleteUser()">Delete</button>
+</div>
+
+<div class="box">
+<h3>Open Report</h3>
+<a href="YOUR_GOOGLE_SHEET_LINK" target="_blank">
+<button>📊 View Attendance Sheet</button>
+</a>
+</div>
 
 <script>
-const URL="https://script.google.com/macros/s/AKfycbxxxHrUUSHx-JOORIAfzgabTtySGBRcwBdVs47Ba891Wi1jgfKkOBuy0Spl2cPizz-LUw/exec";
+const URL = "https://script.google.com/macros/s/AKfycbxxxHrUUSHx-JOORIAfzgabTtySGBRcwBdVs47Ba891Wi1jgfKkOBuy0Spl2cPizz-LUw/exec";
 
-function add(){
-fetch(URL,{method:"POST",body:JSON.stringify({
-action:"addUser",username:u.value,password:p.value
-})}).then(r=>r.text()).then(alert);
+// 🔒 ADMIN PROTECTION
+if(localStorage.getItem("role") !== "admin"){
+  alert("Access Denied ❌");
+  window.location = "index.html";
 }
 
-function del(){
-fetch(URL,{method:"POST",body:JSON.stringify({
-action:"deleteUser",username:d.value
-})}).then(r=>r.text()).then(alert);
+function addUser(){
+  fetch(URL,{
+    method:"POST",
+    body:JSON.stringify({
+      action:"addUser",
+      username:newUser.value,
+      password:newPass.value
+    })
+  })
+  .then(res=>res.text())
+  .then(alert);
+}
+
+function deleteUser(){
+  fetch(URL,{
+    method:"POST",
+    body:JSON.stringify({
+      action:"deleteUser",
+      username:delUser.value
+    })
+  })
+  .then(res=>res.text())
+  .then(alert);
 }
 </script>
+
 </body>
 </html>
