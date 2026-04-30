@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>Admin Panel</h2>
+
+<input id="u" placeholder="Username">
+<input id="p" placeholder="Password">
+<button onclick="add()">Add User</button>
+
+<input id="d" placeholder="Delete user">
+<button onclick="del()">Delete</button>
+
+<script>
+const URL="https://script.google.com/macros/s/AKfycbxxxHrUUSHx-JOORIAfzgabTtySGBRcwBdVs47Ba891Wi1jgfKkOBuy0Spl2cPizz-LUw/exec";
+
+function add(){
+fetch(URL,{method:"POST",body:JSON.stringify({
+action:"addUser",username:u.value,password:p.value
+})}).then(r=>r.text()).then(alert);
+}
+
+function del(){
+fetch(URL,{method:"POST",body:JSON.stringify({
+action:"deleteUser",username:d.value
+})}).then(r=>r.text()).then(alert);
+}
+</script>
+</body>
+</html>
